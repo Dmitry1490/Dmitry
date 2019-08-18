@@ -1,7 +1,5 @@
-import java.util.concurrent.Semaphore;
 
 public class Tunnel extends Stage {
-    private Semaphore semaphore;
 
     public Tunnel() {
         this.length = 80;
