@@ -1,11 +1,11 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.Semaphore;
+
+import java.util.concurrent.CountDownLatch;
 
 public class MainClass {
     public static final int CARS_COUNT = 4;
     public static int finish = 0;
-    private static Semaphore SEMAPHORE = new Semaphore(CARS_COUNT);
+
+    private  static CountDownLatch countDownLatch = new CountDownLatch(CARS_COUNT + CARS_COUNT + 1 + CARS_COUNT);
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -13,13 +13,20 @@ public class MainClass {
         Race race = new Race(new Road(60), new Tunnel(), new Road(40));
         Car[] cars = new Car[CARS_COUNT];
         for (int i = 0; i < cars.length; i++) {
-            cars[i] = new Car(race, 20 + (int) (Math.random() * 10), SEMAPHORE);
+            cars[i] = new Car(race, 20 + (int) (Math.random() * 10), countDownLatch);
         }
         for (int i = 0; i < cars.length; i++) {
             new Thread(cars[i]).start();
 
         }
-        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+
+        while (countDownLatch.getCount() > 1) {
+            Thread.sleep(1000);
+        }
+        countDownLatch.countDown();
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка начилась!!!");
+
     }
+
 }
 
